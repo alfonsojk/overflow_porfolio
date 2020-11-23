@@ -4,3 +4,28 @@
  Description: Sample website create for a sample portfolio
  Version: 1.0.0
  */
+
+
+ .send{
+     display: flex;
+     justify-content: center;
+ }
+ .actions{
+    display: flex;
+    justify-content: center;
+}
+.annotation{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10%;
+}
+.mail{
+    text-decoration: overline;
+}
+.header_2{
+    text-decoration: overline;
+}
+.elementor-image{
+    display:flex;
+    justify-content: center;
+}
