@@ -1,23 +1,69 @@
+<!--FORM PHP -->
+<?php
+if($_POST) { //IF THEY ARE DATA
+    $to = "alfonso.juarezkelly@gmail.com";
+    $visitor_name = ""; 
+    $visitor_email = "";
+    $email_title = "Información Portafolio";
+    $visitor_message = "";
+    if(isset($_POST['visitor_name'])) {
+        $visitor_name = filter_var($_POST['visitor_name'], FILTER_SANITIZE_STRING);
+    }
+    if(isset($_POST['visitor_email'])) {
+        $visitor_email = str_replace(array("\r", "\n", "%0a", "%0d"), '', $_POST['visitor_email']);
+        $visitor_email = filter_var($visitor_email, FILTER_VALIDATE_EMAIL);
+    }
+    if(isset($_POST['visitor_message'])) {
+        $visitor_message = filter_var($_POST['visitor_message'] , FILTER_SANITIZE_STRING);
+    }
+    $message = "Informes sobre la página web Portafolio \r\n"
+    . 'Nombre: ' . $visitor_name . "\r\n"
+    . 'Email: ' . $visitor_email . "\r\n"
+    . 'Mensaje: ' . $visitor_message . "\r\n";
+    
+    $headers  = 'MIME-Version: 1.0' . "\r\n"
+    .'Content-type: text/html; charset=utf-8' . "\r\n"
+    .'From: ' . $visitor_email . "\r\n"
+    . 'X-Mailer: PHP/' . phpversion();
+    if(wp_mail($to, $visitor_name, $visitor_message, $headers)) {
+		echo '<script type="text/javascript">
+    alert("Thank you for contacting me. You will get a reply within 24 hours.");
+    window.location.href="index.php";
+    </script>';
+    } else {
+		echo'<script type="text/javascript">
+    alert("We are sorry but the email did not go through.");
+    window.location.href="index.php";
+    </script>';
+    }
+}
+?>
+<!--ERROR MESSAGE FORM PHP-->
+<?php
+  $name_error = $email_error = $message_error = "";
+  $visitor_name = $visitor_email = $visitor_message = "";
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if (empty($_POST["visitor_name"])) {
+      $visitor_name_error = "Required";
+    } else {
+      $visitor_name = proc_input($_POST["fullname"]);
+    }
+    if (empty($_POST["visitor_email"])) {
+        $visitor_email_error = "Required";
+    } else {
+        $visitor_email = proc_input($_POST["email"]);
+    }
+    if (empty($_POST["visitor_message"])){
+        $visitor_message_error = "Required";
+    }else{
+        $visitor_message = proc_input($_POST["message"]);
+    }
+}
+?>
 <!--CONTENT DISPLAY -->
 <?php
 get_header();
 ?>
-<body class="is-preload">
-<!-- HEADER -->
-    <header id="header">
-        <div class="inner">
-            <a href="#" class="image avatar"><img src="<?php echo get_stylesheet_directory_uri()?>/images/avatar.jpg" alt="" /></a>
-            <h1><strong>HEY, I'M ALFONSO</strong></h1>
-        </div>
-        <div class="inner">
-            <ul class="icons">
-                <li><a href="mailto:alenthres@gmail.com" class="icon solid fa-envelope" target="_blank"><span class="label">Email</span></a></li>
-                <li><a href="https://github.com/alfonsojk" class="icon brands fa-github" target="_blank"><span class="label">Github</span></a></li>
-                <li><a href="https://www.linkedin.com/in/alfonsojk/" class="icon brands fa-linkedin" target="_blank"><span class="label">Linkedin</span></a></li>
-                <li><a href="https://freecodecamp.com/alfonsojk" class="icon brands fa-free-code-camp" target="_blank"><span class="label">Dribbble</span></a></li>
-            </ul>
-        </div> 
-    </header>
     <!-- MAIN -->
     <div id="main">
         <!-- ONE -->
@@ -75,39 +121,26 @@ get_header();
                 </div>	     
             </div>                   
         </section> 
-        <!-- ADD POST IN PROJECTS -->
         <!-- PROJECTS  -->
-        <!--PHP POST LOOPS -->
-        <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-        <!-- Test if the current post is in category 3. -->
-        <!-- If it is, the div box is given the CSS class "post-cat-three". -->
-        <!-- Otherwise, the div box is given the CSS class "post". -->
-        <?php if ( in_category( '3' ) ) : ?>
-            <div class="post-cat-three">
-        <?php else : ?>
-            <div class="post">
-        <?php endif; ?>
-        <!--PHP POST LOOPS -->
 		<section id="three">
 			<h2 id="projects"style="text-decoration:overline;">projects</h2>
 			<div class="row">
-            
-                <article class="col-6 col-12-xsmall work-item">
-                    <a href="https://co-lateral.mx/" class="image fit thumb" target="_blank"><img src="<?php echo get_stylesheet_directory_uri()?>/images/thumbs/01.jpg" alt="" /></a>
-                        <h3>Colectivo Lateral de Arquitectura</h3>
-                        <p> Web page for Co-Lateral architecture office, mainly the project was built creating a worpress template as Content Management System (CMS) and providing maintenance for project updates.</p>
-                </article>
-                <article class="col-6 col-12-xsmall work-item">
-                    <a href="https://5elementos.mx/" class="image fit thumb" target="_blank"><img src="<?php echo get_stylesheet_directory_uri()?>/images/thumbs/02.jpg" alt="" /></a>
-                        <h3>5 Elementos</h3>
-                        <p>Real state landing page, main purpose for the bussines is land for sale. Front-End builded in HTML, CSS and Javascript. Back-End was developed in PHP.</p>
-                </article>
-                <article class="col-6 col-12-xsmall work-item">
-                    <a href="https://determined-jones-8af34d.netlify.app" class="image fit thumb" target="_blank"><img src="<?php echo get_stylesheet_directory_uri()?>/images/thumbs/03.jpg" alt="" /></a>
-                        <h3>Webb App (MERNG)</h3>
-                        <p>Social media app application builded using Mongo DB, Express, Node, React and GraphQL (MERNG Stack). The purpose was to implement a  GraphQL Server that uses Node and Express to comunicate to a Mongo DB database and fetch data.</p>
-                </article>
-                <article class="col-6 col-12-xsmall work-item">
+            <article class="col-6 col-12-xsmall work-item">
+                <a href="https://co-lateral.mx" class="image fit thumb" target="_blank"><img src="<?php echo get_stylesheet_directory_uri()?>/images/thumbs/01.jpg" alt="" /></a>
+                <h3>Colectivo Lateral de Arquitectura</h3>
+                <p>SWeb page for Co-Lateral architecture office, mainly the project was built creating a worpress template as Content Management System (CMS) and providing maintenance for project updates.</p>
+            </article>
+            <article class="col-6 col-12-xsmall work-item">
+                <a href="https://5elementos.mx" class="image fit thumb" target="_blank"><img src="<?php echo get_stylesheet_directory_uri()?>/images/thumbs/02.jpg" alt="" /></a>
+                <h3>5 Elementos</h3>
+                <p>Real state landing page, main purpose for the bussines is land for sale. Front-End builded in HTML, CSS and Javascript. Back-End was developed in PHP.</p>
+            </article>
+            <article class="col-6 col-12-xsmall work-item">
+                <a href="https://determined-jones-8af34d.netlify.app" class="image fit thumb" target="_blank"><img src="<?php echo get_stylesheet_directory_uri()?>/images/thumbs/03.jpg" alt="" /></a>
+                <h3>Webb App (MERNG)</h3>
+                <p>Social media app application builded using Mongo DB, Express, Node, React and GraphQL (MERNG Stack). The purpose was to implement a  GraphQL Server that uses Node and Express to comunicate to a Mongo DB database and fetch data.</p>
+            </article>
+            <article class="col-6 col-12-xsmall work-item">
                     <a href="images/fulls/04.jpg" class="image fit thumb" target="_blank"><img src="<?php echo get_stylesheet_directory_uri()?>/images/thumbs/04.jpg" alt="" /></a>
                         <h3>Tetris App</h3>
                         <p>Tetris game builded in Javascript from scratch.</p>
@@ -123,31 +156,32 @@ get_header();
                     <p>First project that consist in a loading function that displays an animation for a video banner, builded in Javascript.</p>
                 </article>
                 <article class="col-6 col-12-xsmall work-item">
-                    <a href="images/fulls/07.jpg" class="image fit thumb"><img src="<?php echo get_stylesheet_directory_uri()?>/images/thumbs/07.jpg" alt="" /></a>
-                    <h3>Raw Wordpress Portfolio</h3>
-                    <p>Wordpress project builded with Elementor adding shortcodes for specific design.</p>
-                    <!-- DISPLAY POST LOOP IN A DIV BOX. -->
-                    <div class="entry">
-                        <?php the_content(); ?>
-                    </div>
-                    <!-- Display a comma separated list of the Post's Categories. -->
-                    <p class="postmetadata"><?php _e( 'Posted in' ); ?> <?php the_category( ', ' ); ?></p>
-                    </div> <!-- closes the first div box -->
-                    <!-- Stop The Loop (but note the "else:" - see next line). -->
-                    <?php endwhile; else : ?>
-                    <!-- The very first "if" tested to see if there were any Posts to -->
-                    <!-- display.  This "else" part tells what do if there weren't any. -->
-                    <p><?php esc_html_e( 'Sorry, no posts matched your criteria.' ); ?></p>
-                    <!-- REALLY stop The Loop. -->
-                    <?php endif; ?>
+                    <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+                        <!--PHP POST LOOPS -->
+                        <a class="image fit thumb" target="_blank">
+                        <?php the_post_thumbnail( array( 348, 232 ) ); ?>
+                        </a>
+                        <a href="<?php the_permalink(); ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"></a>
+                        <?php the_title(); ?>
+                        <div class="entry">
+                            <?php the_meta(); ?>
+                            <?php the_content(); ?>
+                        </div>
+                        <!-- Stop The Loop (but note the "else:" - see next line). -->
+                        <?php endwhile; else : ?>
+                            <p><?php esc_html_e( 'Sorry, no posts matched your criteria.' ); ?></p>
+                            <!-- REALLY stop The Loop. -->
+                        <?php endif; ?>
+                <!-- ADD POST IN PROJECTS -->
+                <!--PHP POST LOOPS -->
+                    <ul class="actions"style= "display: flex;justify-content: center;margin-top:30%;">
+                        <li><a href="https://github.com/alfonsojk" target="_blank" class="button">full portfolio</a></li>
+                    </ul>
                 </article>
-			</div>
-            <ul class="actions"style= "display: flex;justify-content: center;">
-                <li><a href="https://github.com/alfonsojk" target="_blank" class="button">full portfolio</a></li>
-            </ul>
+            
 		</section>
         <!-- FOUR -->
-	    <section id="four">
+	    <section id="three">
             <h2 style="text-decoration:overline;">get in touch</h2>
             <ul style=" list-style-type: none;">
                 <li>let's talk</li>
